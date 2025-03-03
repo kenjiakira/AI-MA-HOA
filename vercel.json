@@ -3,7 +3,12 @@
   "builds": [
     {
       "src": "server.js",
-      "use": "@vercel/node"
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": "**",
+        "memory": 1024,
+        "maxDuration": 10
+      }
     }
   ],
   "routes": [
@@ -18,12 +23,5 @@
   ],
   "env": {
     "NODE_ENV": "production"
-  },
-  "functions": {
-    "server.js": {
-      "includeFiles": "**",
-      "memory": 1024,
-      "maxDuration": 10
-    }
   }
 }
