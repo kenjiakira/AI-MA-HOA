@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AI Conversation - Cuộc trò chuyện huyền bí giữa hai AI Aki và Miko">
+  <title>Mystical AI Portal | Aki vs Miko</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;700&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+  <div id="bg-canvas"></div>
+  
+  <div class="magic-overlay"></div>
+  
+  <div class="container">
+    <header>
+      <div class="magical-emblem">
+        <div class="emblem-inner"></div>
+      </div>
+      <h1>Mystical AI Portal</h1>
+      <p>Cuộc đối thoại huyền bí giữa Aki và Miko</p>
+    </header>
+    
+    <div id="controlsPanel" class="controls portal-panel">
+      <div class="glow-border"></div>
+      <div class="form-group">
+        <label for="initialPrompt"><i class="fas fa-magic"></i> Thần chú khởi đầu:</label>
+        <input type="text" id="initialPrompt" placeholder="Phép thuật bắt đầu cuộc trò chuyện..." 
+               value="Chào bạn, hôm nay chúng ta hãy nói về những điều huyền bí..."
+               aria-label="Chủ đề khởi đầu">
+      </div>
+      
+      <div class="form-group">
+        <label for="numExchanges"><i class="fas fa-sync-alt"></i> Số chu kỳ đối thoại:</label>
+        <input type="number" id="numExchanges" min="1" max="50" value="10"
+               aria-label="Số lượt trao đổi">
+      </div>
+      
+      <div class="buttons">
+        <button id="startBtn" class="btn btn-primary">
+          <i class="fas fa-play"></i> <span>Triệu hồi</span>
+        </button>
+        <button id="stopBtn" class="btn btn-danger" disabled>
+          <i class="fas fa-stop"></i> <span>Phong ấn</span>
+        </button>
+        <button id="resetBtn" class="btn btn-secondary">
+          <i class="fas fa-sync-alt"></i> <span>Tịnh hóa</span>
+        </button>
+      </div>
+    </div>
+    
+    <div id="conversationContainer" class="conversation-container magic-mirror hidden">
+      <div class="conversation-header">
+        <div class="ai-profile aki-profile">
+          <div id="akiAvatar" class="ai-avatar">
+            <span>A</span>
+            <div class="aura"></div>
+          </div>
+          <div class="ai-name">Aki</div>
+        </div>
+        <div class="conversation-status" id="status">Chờ triệu hồi...</div>
+        <div class="ai-profile miko-profile">
+          <div id="mikoAvatar" class="ai-avatar">
+            <span>M</span>
+            <div class="aura"></div>
+          </div>
+          <div class="ai-name">Miko</div>
+        </div>
+      </div>
+      
+      <div class="conversation-scroll">
+        <div class="conversation" id="conversation">
+       
+        </div>
+      </div>
+      
+      <div class="magic-runes">
+        <div class="rune"></div>
+        <div class="rune"></div>
+        <div class="rune"></div>
+      </div>
+    </div>
+    
+    <footer>
+      <p>© 2025 - Mystical AI Portal | <a href="#" id="aboutLink">About</a></p>
+    </footer>
+  </div>
+  
+  <div id="aboutModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>The Mystical AI Portal</h2>
+      <p>This mystical gateway connects you to two powerful AI entities, Aki and Miko, who dwell in the digital realm.</p>
+      <p>Through ancient algorithms and enchanted code, they can discuss any topic you wish to explore.</p>
+      <p>Created using Node.js, Socket.IO, Three.js, and the Google Generative AI API.</p>
+    </div>
+  </div>
+  
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="background.js"></script>
+  <script>
+    // Store socket globally for fallback access
+    window.socket = io({
+      path: '/socket.io/',
+      transports: ['websocket', 'polling'],
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
+      timeout: 20000
+    });
+  </script>
+  <script src="script.js"></script>
+  <script src="socket-fallback.js"></script>
+</body>
+</html>
