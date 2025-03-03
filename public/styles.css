@@ -1112,3 +1112,51 @@ a:hover::after {
 .theme-toggle {
   display: none;
 }
+
+/* Error message styles */
+.error-message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  padding: 2rem;
+  border-radius: 1rem;
+  border: 1px solid var(--danger-btn);
+  color: var(--text-primary);
+  font-family: 'Raleway', sans-serif;
+  text-align: center;
+  max-width: 80%;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-out;
+  box-shadow: 0 0 20px rgba(255, 95, 138, 0.4);
+}
+
+.error-icon {
+  font-size: 3rem;
+  color: var(--danger-btn);
+  margin-bottom: 1rem;
+}
+
+.error-text {
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.error-action button {
+  background: var(--primary-btn);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-family: 'Cinzel', serif;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.error-action button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(138, 95, 255, 0.4);
+}

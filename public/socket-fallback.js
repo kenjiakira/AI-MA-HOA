@@ -1,37 +1,58 @@
-
-
 function checkSocketConnection() {
+  
+  if (typeof io === 'undefined') {
+    console.error('Socket.IO is not available');
+    showFallbackError('Socket.IO không khả dụng. Vui lòng tải lại trang.');
+    return;
+  }
   
   setTimeout(() => {
     const socket = window.socket;
     if (!socket || !socket.connected) {
       console.log('Socket not connected, switching to polling transport');
       
-      
-      window.socket = io({
-        path: '/socket.io/',
-        transports: ['polling'],
-        reconnectionAttempts: 3,
-        timeout: 10000
-      });
-      
-      
-      const statusEl = document.getElementById('status');
-      if (statusEl) {
-        statusEl.textContent = 'Đang kết nối qua phương thức thay thế...';
-        statusEl.className = 'conversation-status status-warning';
+      try {
+        window.socket = io(window.location.origin, {
+          transports: ['polling'],
+          reconnectionAttempts: 3,
+          timeout: 10000
+        });
+        
+        const statusEl = document.getElementById('status');
+        if (statusEl) {
+          statusEl.textContent = 'Đang kết nối qua phương thức thay thế...';
+          statusEl.className = 'conversation-status status-warning';
+        }
+        
+        attachSocketHandlers(window.socket);
+      } catch (error) {
+        console.error('Failed to create fallback connection:', error);
+        showFallbackError('Không thể kết nối đến máy chủ.');
       }
-      
-      
-      attachSocketHandlers(window.socket);
     }
   }, 5000);
 }
 
+function showFallbackError(message) {
+  const errorDiv = document.createElement('div');
+  errorDiv.className = 'error-message';
+  errorDiv.innerHTML = `
+    <div class="error-icon"><i class="fas fa-exclamation-triangle"></i></div>
+    <div class="error-text">${message}</div>
+    <div class="error-action">
+      <button onclick="window.location.reload()">Tải lại trang</button>
+    </div>
+  `;
+  document.body.appendChild(errorDiv);
+  
+  const statusEl = document.getElementById('status');
+  if (statusEl) {
+    statusEl.textContent = message;
+    statusEl.className = 'conversation-status status-error';
+  }
+}
+
 function attachSocketHandlers(socket) {
-  
-  
-  
   socket.on('connect', () => {
     console.log('Fallback connected to server with ID:', socket.id);
     const statusEl = document.getElementById('status');
@@ -50,7 +71,6 @@ function attachSocketHandlers(socket) {
     }
   });
   
-  
   socket.on('newMessage', (message) => {
     const conversationEl = document.getElementById('conversation');
     if (conversationEl) {
@@ -67,7 +87,8 @@ function attachSocketHandlers(socket) {
   });
 }
 
-
 document.addEventListener('DOMContentLoaded', () => {
-  checkSocketConnection();
+  setTimeout(() => {
+    checkSocketConnection();
+  }, 2000);
 });

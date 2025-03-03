@@ -9,20 +9,28 @@ const aiService = require('./aiService');
 const app = express();
 const server = http.createServer(app);
 
-const io = new Server(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"]
-  },
-  transports: ['polling', 'websocket'],
-  path: '/socket.io/',
-  pingTimeout: 30000,
-  pingInterval: 25000,
-  allowUpgrades: true,
-  cookie: false,
-  serveClient: true,
-  allowEIO3: true
-});
+let io;
+
+if (process.env.VERCEL) {
+  io = new Server({
+    cors: {
+      origin: "*",
+      methods: ["GET", "POST"]
+    },
+    path: '/socket.io/',
+    transports: ['polling', 'websocket'],
+    serveClient: false
+  });
+  
+  io.attach(server);
+} else {
+  io = new Server(server, {
+    cors: {
+      origin: "*",
+      methods: ["GET", "POST"]
+    }
+  });
+}
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
@@ -31,8 +39,12 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.get('/socket-health', (req, res) => {
-  res.status(200).json({ status: 'ok', message: 'Socket.IO server is running' });
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ 
+    status: 'ok', 
+    environment: process.env.VERCEL ? 'Vercel' : 'Development',
+    timestamp: new Date().toISOString(),
+  });
 });
 
 io.on('connection', (socket) => {
@@ -65,8 +77,8 @@ io.on('connection', (socket) => {
 });
 
 if (process.env.VERCEL) {
-  module.exports = app;
-} else { 
+  module.exports = server;
+} else {
   const PORT = process.env.PORT || 3000;
   server.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
